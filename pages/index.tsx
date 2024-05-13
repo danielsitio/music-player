@@ -16,6 +16,8 @@ export default function Home({ song }: props) {
 
   const [imgSrc, setImgSrc] = useState("")
 
+
+  //@ts-ignore
   const imgData = song.picture![0].data["data"]
 
   useEffect(() => {
@@ -49,7 +51,8 @@ export default function Home({ song }: props) {
 
 
 export const getStaticProps = (async (context) => {
-  const res = await fetch("http://localhost:3000/api/hello")
+
+  const res = await fetch(process.env.API_URL!)
   const data: ICommonTagsResult = await res.json()
 
   return {
