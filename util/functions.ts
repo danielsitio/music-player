@@ -7,22 +7,17 @@ export const getSongMetadata = async (songPath: string): Promise<SongMetadata> =
     const { common, format } = await parseFile(songPath)
     console.log("la cancion " + common.title + " tiene cover ? " + common.picture)
 
-    if (common.picture) {
-        const imageDataJson = JSON.stringify(common.picture![0].data)
-        const imageData = JSON.parse(imageDataJson)["data"]
-        return {
-            filepath: songPath,
-            title: common.title!,
-            duration: format.duration!,
-            cover: {
-                format: "image/jpeg",
-                data: btoa(parseImageData(imageData))
-            }
-        }
-    }
-    else return {
+
+    const imageDataJson = JSON.stringify(common.picture![0].data)
+    const imageData = JSON.parse(imageDataJson)["data"]
+    return {
+        filepath: songPath,
         title: common.title!,
-        duration: format.duration!
+        duration: format.duration!,
+        cover: {
+            format: "image/jpeg",
+            data: btoa(parseImageData(imageData))
+        }
     }
 }
 export const getAllSongsMetadata = async (): Promise<SongMetadata[]> => {
