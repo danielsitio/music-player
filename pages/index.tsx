@@ -1,9 +1,9 @@
 import { Inter } from "next/font/google";
 import { GetStaticProps } from 'next'
-import { useEffect, useState } from "react";
 import Image from 'next/image'
 import { getAllSongsMetadata } from "@/util/functions";
 import { SongMetadata } from "@/util/types";
+import { useRef, useState } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,34 +14,30 @@ type props = {
 
 export default function Home({ songsMetadata }: props) {
 
-  const [imgSrc, setImgSrc] = useState("")
+  const [currentSongIndex, setCurrentSongIndex] = useState<number>(0)
 
-  useEffect(() => {
-    console.log(songsMetadata[0].filepath)
+  const playerControls = useRef<HTMLAudioElement>(null)
 
-    /* let data = parseImageData(songsMetadata[0].cover!.data)
-
-    setImgSrc(`data:${songsMetadata[0].cover!.format};base64,${btoa(data)}`) */
-    return () => {
-
-    }
-  }, [])
-
+  const nextSong = () => {
+    const nextSongIndex = currentSongIndex + 1
+    if (songsMetadata[nextSongIndex]) setCurrentSongIndex(nextSongIndex)
+  }
+  const play = () => {
+    playerControls.current?.play()
+  }
+  const pause = () => {
+    playerControls.current?.pause()
+  }
 
   return (
-    <>
-      {
-        songsMetadata.map(({ filepath, title, duration, cover }) =>
-          <div key={filepath}>
-            <h1>{title}</h1>
-            <Image src={`data:${cover.format};base64,${cover.data}`} alt="image" width={350} height={350} />
-            <audio controls >
-              <source src={filepath} type="audio/mp3" />
-            </audio>
-          </div>
-        )
-      }
-    </>)
+    <div>
+      <audio ref={playerControls} autoPlay src={songsMetadata[currentSongIndex].filepath}></audio>
+      <Image src={`data:${songsMetadata[currentSongIndex].cover.format};base64,${songsMetadata[currentSongIndex].cover.data}`} alt="image" width={350} height={350} />
+      <button onClick={play}>play</button>
+      <button onClick={pause}>pause</button>
+      <button onClick={nextSong}>next</button>
+    </div>
+  )
 }
 
 
@@ -56,12 +52,3 @@ export const getStaticProps = (async (context) => {
     }
   }
 }) satisfies GetStaticProps<props>
-
-
-const parseImageData = (imageData: number[]): string => {
-  let data: string = ""
-  for (let i = 0; i < imageData.length; i++) {
-    data += String.fromCharCode(imageData[i]);
-  }
-  return data
-}

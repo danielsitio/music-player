@@ -5,7 +5,6 @@ import { join, sep } from 'path'
 
 export const getSongMetadata = async (songPath: string): Promise<SongMetadata> => {
     const { common, format } = await parseFile(songPath)
-    console.log("la cancion " + common.title + " tiene cover ? " + common.picture)
 
 
     const imageDataJson = JSON.stringify(common.picture![0].data)
