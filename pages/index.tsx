@@ -31,7 +31,7 @@ export default function Home({ songsMetadata }: props) {
     <>
       {
         songsMetadata.map(({ filepath, title, duration, cover }) =>
-          <div>
+          <div key={filepath}>
             <h1>{title}</h1>
             <Image src={`data:${cover.format};base64,${cover.data}`} alt="image" width={350} height={350} />
           </div>
