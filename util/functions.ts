@@ -1,7 +1,7 @@
 import { parseFile } from "music-metadata"
 import { SongMetadata } from "./types"
 import { existsSync, readdirSync } from 'fs'
-import { join } from 'path'
+import { join, sep } from 'path'
 
 export const getSongMetadata = async (songPath: string): Promise<SongMetadata> => {
     const { common, format } = await parseFile(songPath)
@@ -11,7 +11,7 @@ export const getSongMetadata = async (songPath: string): Promise<SongMetadata> =
     const imageDataJson = JSON.stringify(common.picture![0].data)
     const imageData = JSON.parse(imageDataJson)["data"]
     return {
-        filepath: songPath,
+        filepath: songPath.split(sep).pop()!,
         title: common.title!,
         duration: format.duration!,
         cover: {
@@ -23,7 +23,7 @@ export const getSongMetadata = async (songPath: string): Promise<SongMetadata> =
 export const getAllSongsMetadata = async (): Promise<SongMetadata[]> => {
 
     let songsMetadata: SongMetadata[] = []
-    let songFiles = findFiles("./assets", ".mp3")
+    let songFiles = findFiles("./public", ".mp3")
     for (const songFile of songFiles!) {
         const songMetadata = await getSongMetadata(songFile)
         songsMetadata.push(songMetadata)

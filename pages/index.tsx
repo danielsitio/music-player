@@ -17,6 +17,7 @@ export default function Home({ songsMetadata }: props) {
   const [imgSrc, setImgSrc] = useState("")
 
   useEffect(() => {
+    console.log(songsMetadata[0].filepath)
 
     /* let data = parseImageData(songsMetadata[0].cover!.data)
 
@@ -34,6 +35,9 @@ export default function Home({ songsMetadata }: props) {
           <div key={filepath}>
             <h1>{title}</h1>
             <Image src={`data:${cover.format};base64,${cover.data}`} alt="image" width={350} height={350} />
+            <audio controls >
+              <source src={filepath} type="audio/mp3" />
+            </audio>
           </div>
         )
       }
