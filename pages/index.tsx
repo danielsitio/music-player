@@ -1,34 +1,26 @@
-import Head from "next/head";
 import { Inter } from "next/font/google";
 import { GetStaticProps } from 'next'
-import { ICommonTagsResult, IPicture } from "music-metadata";
 import { useEffect, useState } from "react";
 import Image from 'next/image'
-import { getSongInfo, getSongMetadata } from "@/util/functions";
+import { getAllSongsMetadata } from "@/util/functions";
 import { SongMetadata } from "@/util/types";
 
 const inter = Inter({ subsets: ["latin"] });
 
 
 type props = {
-  songMetadata: SongMetadata,
+  songsMetadata: SongMetadata[],
 }
 
-export default function Home({ songMetadata }: props) {
-
-  const { title, cover, duration } = songMetadata
+export default function Home({ songsMetadata }: props) {
 
   const [imgSrc, setImgSrc] = useState("")
 
-  const imgData = songMetadata.cover.data
-
   useEffect(() => {
-    let data: string = ""
-    for (var i = 0; i < imgData.length; i++) {
-      data += String.fromCharCode(imgData[i]);
-    }
 
-    setImgSrc(`data:${songMetadata.cover.format};base64,${btoa(data)}`)
+    /* let data = parseImageData(songsMetadata[0].cover!.data)
+
+    setImgSrc(`data:${songsMetadata[0].cover!.format};base64,${btoa(data)}`) */
     return () => {
 
     }
@@ -37,10 +29,14 @@ export default function Home({ songMetadata }: props) {
 
   return (
     <>
-      <div>el titulo es {title}</div>
-      <div>el la duracion es {duration}</div>
-      <div>el formato de la imagen es {cover.format}</div>
-      <Image src={imgSrc} alt="image" width={350} height={350} />
+      {
+        songsMetadata.map(({ filepath, title, duration, cover }) =>
+          <div>
+            <h1>{title}</h1>
+            <Image src={`data:${cover.format};base64,${cover.data}`} alt="image" width={350} height={350} />
+          </div>
+        )
+      }
     </>)
 }
 
@@ -48,11 +44,20 @@ export default function Home({ songMetadata }: props) {
 
 export const getStaticProps = (async (context) => {
 
-  const songMetadata = await getSongMetadata()
-
+  const songMetadata = await getAllSongsMetadata()
+  getAllSongsMetadata()
   return {
     props: {
-      songMetadata: songMetadata
+      songsMetadata: songMetadata
     }
   }
 }) satisfies GetStaticProps<props>
+
+
+const parseImageData = (imageData: number[]): string => {
+  let data: string = ""
+  for (let i = 0; i < imageData.length; i++) {
+    data += String.fromCharCode(imageData[i]);
+  }
+  return data
+}

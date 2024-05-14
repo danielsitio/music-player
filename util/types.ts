@@ -1,4 +1,5 @@
 export type SongMetadata = {
+    filepath: string
     title: string
     duration: number
     cover: Image
@@ -6,5 +7,5 @@ export type SongMetadata = {
 }
 export type Image = {
     format: string
-    data: Array<number>
+    data: string
 }
