@@ -1,9 +1,9 @@
 import { parseFile } from "music-metadata"
-import { SongMetadata } from "./types"
+import { Song } from "./types"
 import { existsSync, readdirSync } from 'fs'
 import { join, sep } from 'path'
 
-export const getSongMetadata = async (songPath: string): Promise<SongMetadata> => {
+export const getSongMetadata = async (songPath: string): Promise<Song> => {
     const { common, format } = await parseFile(songPath)
 
 
@@ -19,9 +19,9 @@ export const getSongMetadata = async (songPath: string): Promise<SongMetadata> =
         }
     }
 }
-export const getAllSongsMetadata = async (): Promise<SongMetadata[]> => {
+export const getAllSongsMetadata = async (): Promise<Song[]> => {
 
-    let songsMetadata: SongMetadata[] = []
+    let songsMetadata: Song[] = []
     let songFiles = findFiles("./public", ".mp3")
     for (const songFile of songFiles!) {
         const songMetadata = await getSongMetadata(songFile)

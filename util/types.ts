@@ -1,4 +1,4 @@
-export type SongMetadata = {
+export type Song = {
     filepath: string
     title: string
     duration: number
