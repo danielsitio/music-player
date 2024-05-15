@@ -1,0 +1,28 @@
+.mainContainer {
+    position: relative;
+    z-index: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    height: 100dvh;
+
+    padding: 20px;
+    /*variable*/
+}
+
+.topPart {
+    display: flex;
+    flex-grow: 1;
+
+    align-items: end;
+
+    padding-bottom: 20px;
+}
+
+.backgroundCover {
+    position: absolute;
+    z-index: -1;
+    object-fit: cover;
+    filter: blur(20px) brightness(.3);
+}

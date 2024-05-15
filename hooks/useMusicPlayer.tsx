@@ -15,6 +15,7 @@ export const useMusicPlayer = (playlist: Song[]): [(node: HTMLAudioElement) => v
       setAudioElement(node)
       node.onplaying = () => setSongIsPlaying(true)
       node.onpause = () => setSongIsPlaying(false)
+
     }
   }, [])
 
