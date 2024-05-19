@@ -6,13 +6,17 @@ import { join, sep } from 'path'
 export const getSongMetadata = async (songPath: string): Promise<Song> => {
     const { common, format } = await parseFile(songPath)
 
+    const { title, album, artist } = common
+    const { duration } = format
 
     const imageDataJson = JSON.stringify(common.picture![0].data)
     const imageData = JSON.parse(imageDataJson)["data"]
     return {
         filepath: songPath.split(sep).pop()!,
-        title: common.title!,
-        duration: format.duration!,
+        title: title!,
+        duration: duration!,
+        album: album!,
+        artist: artist!,
         cover: {
             format: "image/jpeg",
             data: btoa(parseImageData(imageData))

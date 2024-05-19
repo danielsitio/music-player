@@ -9,15 +9,21 @@ export const useMusicPlayer = (playlist: Song[]): [(node: HTMLAudioElement) => v
   const [currentSongTime, setCurrentSongTime] = useState<number>(0)
   const [currentSongIndex, setCurrentSongIndex] = useState<number>(0)
   const [songIsPlaying, setSongIsPlaying] = useState<boolean>(false)
+  const [bufferedContent, setBufferedContent] = useState<number>(0)
 
   const audioElementRef = useCallback((node: HTMLAudioElement | null) => {
     if (node !== null) {
       setAudioElement(node)
       node.onplaying = () => setSongIsPlaying(true)
       node.onpause = () => setSongIsPlaying(false)
-
+      node.ontimeupdate = () => updateCurrentSongTime(node.currentTime)
     }
   }, [])
+
+  const updateCurrentSongTime = (newTime: number) => {
+    const roundedNewTime = Math.floor(newTime)
+    if (roundedNewTime !== currentSongTime) setCurrentSongTime(roundedNewTime)
+  }
 
   const setSong = (songIndex: number) => {
     if (playlist[songIndex]) setCurrentSongIndex(songIndex)
@@ -25,13 +31,22 @@ export const useMusicPlayer = (playlist: Song[]): [(node: HTMLAudioElement) => v
 
   const setNextSong = () => {
     const nextSongIndex = currentSongIndex + 1
-    if (playlist[nextSongIndex]) setCurrentSongIndex(nextSongIndex)
+    if (playlist[nextSongIndex]) {
+      setCurrentSongIndex(nextSongIndex)
+      setCurrentSongTime(0)
+    }
   }
 
   const setPreviousSong = () => {
     const previousSongIndex = currentSongIndex - 1
-    if (playlist[previousSongIndex]) setCurrentSongIndex(previousSongIndex)
+    if (playlist[previousSongIndex]) {
+      setCurrentSongIndex(previousSongIndex)
+      setCurrentSongTime(0)
+    }
   }
+
+  const forward = (seconds: number) => audioElement!.currentTime = audioElement!.currentTime + seconds
+  const backwards = (seconds: number) => audioElement!.currentTime = audioElement!.currentTime - seconds
 
   const play = () => {
     audioElement?.play()
@@ -39,19 +54,26 @@ export const useMusicPlayer = (playlist: Song[]): [(node: HTMLAudioElement) => v
   const pause = () => {
     audioElement?.pause()
   }
+  const playTime = (seconds: number) => {
+    if (seconds >= 0 && seconds <= playlist[currentSongIndex].duration) audioElement!.currentTime = seconds
+  }
   <audio src={playlist[0].filepath}></audio>
 
   return [audioElementRef, {
     state: {
       currentSong: playlist[currentSongIndex],
       isPlaying: songIsPlaying,
-      currentSongTime
+      currentSongTime,
+      bufferedContent
     },
     controls: {
       play,
       pause,
       playNextSong: setNextSong,
-      playPreviousSong: setPreviousSong
+      playPreviousSong: setPreviousSong,
+      playTime,
+      forward,
+      backwards
     }
   }]
 }
@@ -59,13 +81,17 @@ export const useMusicPlayer = (playlist: Song[]): [(node: HTMLAudioElement) => v
 type PlayerState = {
   currentSongTime: number
   isPlaying: boolean
-  currentSong: Song
+  currentSong: Song,
+  bufferedContent: number
 }
 type PlayerControls = {
   play: () => void
   pause: () => void
   playNextSong: () => void
   playPreviousSong: () => void
+  playTime: (seconds: number) => void
+  forward: (seconds: number) => void
+  backwards: (seconds: number) => void
 }
 type Player = {
   state: PlayerState

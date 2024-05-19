@@ -1,0 +1,9 @@
+.linetime {
+    position: relative;
+    flex-grow: 1;
+    border-radius: 9999px;
+
+
+    overflow: visible;
+    outline: 1px solid white;
+}

@@ -7,21 +7,71 @@
 
     height: 100dvh;
 
-    padding: 20px;
+
     /*variable*/
 }
 
-.topPart {
+.coverPart {
     display: flex;
     flex-grow: 1;
 
-    align-items: end;
+    align-items: flex-end;
 
     padding-bottom: 20px;
 }
 
+.controls {
+    background-color: rgba(0, 0, 0, .5);
+    padding: 10px 20px 30px 20px;
+}
+
+.topPart {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.linetime {
+    position: relative;
+    flex-grow: 1;
+    border-radius: 9999px;
+
+
+    overflow: visible;
+    outline: 1px solid white;
+}
+
+.linetimeBufferedIndicator {
+    position: absolute;
+    background-color: gray;
+    left: 0;
+    bottom: 0;
+    height: 100%;
+}
+
+.linetimeCurrentTimeIndicator {
+    position: relative;
+    width: 5px;
+    aspect-ratio: 1/1;
+    border-radius: 999px;
+    background-color: white;
+    z-index: 2;
+    outline: 5px orange solid;
+}
+
+.bottomPart {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+
 .backgroundCover {
     position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
     z-index: -1;
     object-fit: cover;
     filter: blur(20px) brightness(.3);
