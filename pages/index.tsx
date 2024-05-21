@@ -3,9 +3,18 @@ import { getAllSongsMetadata } from "@/util/functions";
 import { Song } from "@/util/types";
 import { useMusicPlayer } from '@/hooks/useMusicPlayer';
 import styles from '@/styles/Home.module.css'
-
-import Image from 'next/image'
 import { MouseEventHandler } from 'react';
+
+import { Inter } from 'next/font/google'
+
+
+import { FaRegCirclePlay, FaRegCirclePause } from "react-icons/fa6";
+import { IoIosFastforward, IoIosRewind, IoMdSkipBackward, IoMdSkipForward } from "react-icons/io";
+
+
+
+
+const inter = Inter({ subsets: ["latin"] })
 
 
 type props = {
@@ -40,44 +49,51 @@ export default function Home({ songs }: props) {
   }
 
   return (
-    <main className={styles.mainContainer}>
+    <main className={`${styles.mainContainer} ${inter.className}`}>
 
       <div className={styles.coverPart}>
-        <img src={`data:${format};base64,${data}`} alt="image" width={350} height={350} />
+        <img className={styles.cover} src={`data:${format};base64,${data}`} alt="image" />
       </div>
 
       <div className={styles.controls}>
+
         <div className={styles.topPart}>
-          <div>00:{currentSongMinutes < 10 ? "0" + currentSongMinutes : currentSongMinutes}:{currentSongSeconds < 10 ? "0" + currentSongSeconds : currentSongSeconds}</div>
+          <div className={styles.currentTime}>00:{currentSongMinutes < 10 ? "0" + currentSongMinutes : currentSongMinutes}:{currentSongSeconds < 10 ? "0" + currentSongSeconds : currentSongSeconds}</div>
           <div className={styles.linetime} onClick={linetimeClickHandler}>
             <div style={{ left: proportionalCurrentTime + "%" }} className={styles.linetimeCurrentTimeIndicator} />
           </div>
-          <div>00:0{Math.floor(duration / 60)}:{Math.floor(duration % 60)}</div>
+          <div className={styles.duration}>00:0{Math.floor(duration / 60)}:{Math.floor(duration % 60)}</div>
         </div>
+
         <div className={styles.bottomPart}>
+
           <div className={styles.descriptionContainer}>
-            <div>{title}</div>
-            <div style={{ display: "flex" }}>
-              <div>{artist}</div> - <div>{album}</div>
+            <div className={styles.title}>{title}</div>
+            <div className={styles.artistAlbum}>
+              <div>{artist + " ⋅ " + album}</div>
             </div>
           </div>
-          <div>
-            <button onClick={() => backwards(10)}>-10</button>
-            <button onClick={controls.playPreviousSong}>prev</button>
+
+          <div className={styles.controlButtons}>
+            <IoMdSkipBackward size={20} onClick={controls.playPreviousSong} />
+            <IoIosRewind size={25} onClick={() => backwards(10)} />
             {
-              state.isPlaying ? <button onClick={controls.pause}>pause</button> : <button onClick={controls.play}>play</button>
+              state.isPlaying ? <FaRegCirclePause size={45} onClick={controls.pause} /> : <FaRegCirclePlay size={45} onClick={controls.play} />
             }
-            <button onClick={controls.playNextSong}>next</button>
-            <button onClick={() => forward(10)}>+10</button>
-            <button>loop</button>
+            <IoIosFastforward size={25} onClick={() => forward(10)} />
+            <IoMdSkipForward size={20} onClick={controls.playNextSong} />
+
           </div>
-          <div>
+
+          <div className={styles.optionButtons}>
             <button>info</button>
+            <button>screen</button>
+            <button>volume</button>
           </div>
         </div>
       </div>
 
-      <audio ref={audioElementRef} autoPlay src={filepath} />
+      <audio ref={audioElementRef} autoPlay src={filepath} muted />
       <img src={`data:${format};base64,${data}`} alt='' className={styles.backgroundCover} />
     </main>
   )

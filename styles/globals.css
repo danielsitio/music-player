@@ -5,8 +5,10 @@
     "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
     "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
 
-  --background: rgb(0, 0, 0);
-  --text: white;
+  --bg: rgb(43, 43, 43);
+  --t-bg: rgb(43, 43, 43, .7);
+  --text-1: white;
+  --text-2: #b7b7b7;
 }
 
 * {
@@ -20,7 +22,7 @@ body {
   max-width: 100vw;
   overflow-x: hidden;
   background-color: var(--background);
-  color: var(--text);
+  color: var(--text-1);
 }
 
 a {

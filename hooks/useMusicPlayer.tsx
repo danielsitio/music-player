@@ -1,3 +1,4 @@
+import { roundWith1Decimal } from "@/util/frontend-functions"
 import { Song } from "@/util/types"
 import { useCallback, useState } from "react"
 
@@ -13,14 +14,19 @@ export const useMusicPlayer = (playlist: Song[]): [(node: HTMLAudioElement) => v
 
   const audioElementRef = useCallback((node: HTMLAudioElement | null) => {
     if (node !== null) {
-      setAudioElement(node)
-      node.onplaying = () => setSongIsPlaying(true)
-      node.onpause = () => setSongIsPlaying(false)
+      if (!audioElement) {
+        setAudioElement(node)
+        node.onplaying = () => setSongIsPlaying(true)
+        node.onpause = () => setSongIsPlaying(false)
+      }
+      console.log(Math.round(playlist[currentSongIndex].duration * 10) / 10)
       node.ontimeupdate = () => updateCurrentSongTime(node.currentTime)
     }
-  }, [])
+  }, [currentSongIndex])
+
 
   const updateCurrentSongTime = (newTime: number) => {
+    if (Math.floor(newTime) === Math.floor(playlist[currentSongIndex].duration)) setNextSong()
     const roundedNewTime = Math.floor(newTime)
     if (roundedNewTime !== currentSongTime) setCurrentSongTime(roundedNewTime)
   }

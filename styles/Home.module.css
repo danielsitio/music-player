@@ -6,6 +6,7 @@
     flex-direction: column;
 
     height: 100dvh;
+    overflow: hidden;
 
 
     /*variable*/
@@ -18,11 +19,20 @@
     align-items: flex-end;
 
     padding-bottom: 20px;
+    padding-left: 12px;
+}
+
+.cover {
+    aspect-ratio: 1/1;
+    width: 240px;
+    border-radius: 10px;
 }
 
 .controls {
-    background-color: rgba(0, 0, 0, .5);
-    padding: 10px 20px 30px 20px;
+    background-color: rgba(35, 35, 35, .8);
+    padding: 8px 12px 30px 12px;
+    height: 110px;
+    box-shadow: 0px 0px 1px rgb(35, 35, 35);
 }
 
 .topPart {
@@ -31,14 +41,36 @@
     gap: 20px;
 }
 
+.currentTime,
+.duration {
+    font-size: 12px;
+    letter-spacing: -1px;
+    font-weight: 300;
+    text-shadow: rgba(0, 0, 0, .01) 0 0 1px;
+    width: 50px;
+
+}
+
+.duration {
+    text-align: end;
+}
+
 .linetime {
     position: relative;
     flex-grow: 1;
     border-radius: 9999px;
-
-
     overflow: visible;
-    outline: 1px solid white;
+    background-color: gray;
+}
+
+.linetimeCurrentTimeIndicator {
+    position: relative;
+    width: 4px;
+    aspect-ratio: 1/1;
+    border-radius: 999px;
+    background-color: rgb(246, 127, 0);
+    z-index: 2;
+
 }
 
 .linetimeBufferedIndicator {
@@ -49,19 +81,37 @@
     height: 100%;
 }
 
-.linetimeCurrentTimeIndicator {
-    position: relative;
-    width: 5px;
-    aspect-ratio: 1/1;
-    border-radius: 999px;
-    background-color: white;
-    z-index: 2;
-    outline: 5px orange solid;
-}
 
 .bottomPart {
+    padding-top: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.descriptionContainer {}
+
+.title {
+    font-weight: 500;
+    font-size: 17px;
+    margin-bottom: 5px;
+}
+
+.artistAlbum {
+    color: var(--text-2);
+    font-size: smaller;
+}
+
+.controlButtons {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.optionButtons {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }
 
 
@@ -74,5 +124,6 @@
     left: 0;
     z-index: -1;
     object-fit: cover;
-    filter: blur(20px) brightness(.3);
+    transform: scale(1.1);
+    filter: blur(9px) brightness(.3)
 }
