@@ -7,7 +7,7 @@
 
     height: 100dvh;
     overflow: hidden;
-
+    text-rendering: optimizeLegibility;
 
     /*variable*/
 }
@@ -69,6 +69,7 @@
     aspect-ratio: 1/1;
     border-radius: 999px;
     background-color: rgb(246, 127, 0);
+    outline: rgb(246, 127, 0) 5px solid;
     z-index: 2;
 
 }
@@ -112,6 +113,7 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    gap: 30px;
 }
 
 
@@ -125,5 +127,23 @@
     z-index: -1;
     object-fit: cover;
     transform: scale(1.1);
-    filter: blur(9px) brightness(.3)
+    filter: blur(9px) brightness(.3);
+    user-select: none;
+}
+
+.icon {
+    color: white;
+    transition: .05s;
+}
+
+.icon:hover {
+    scale: 1.04;
+}
+
+.icon:active {
+    scale: 0.99;
+}
+
+.iconInactive {
+    color: var(--not-important);
 }

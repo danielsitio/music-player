@@ -9,7 +9,7 @@ import { Inter } from 'next/font/google'
 
 
 import { FaRegCirclePlay, FaRegCirclePause } from "react-icons/fa6";
-import { IoIosFastforward, IoIosRewind, IoMdSkipBackward, IoMdSkipForward } from "react-icons/io";
+import { IoMdSkipBackward, IoMdSkipForward, IoMdInformationCircleOutline, IoMdExpand, IoMdVolumeHigh, IoMdVolumeOff, IoMdRewind, IoMdFastforward, IoMdRepeat, IoMdShuffle } from "react-icons/io";
 
 
 
@@ -25,11 +25,11 @@ export default function Home({ songs }: props) {
 
   const [audioElementRef, { state, controls }] = useMusicPlayer(songs)
 
-  const { currentSong, currentSongTime, bufferedContent } = state
+  const { currentSong, currentSongTime, muted, looping, randomized } = state
   const { artist, title, album, cover, filepath, duration } = currentSong
   const { format, data } = cover
 
-  const { backwards, forward, playTime } = controls
+  const { backwards, forward, playTime, mute, unmute, playNextSong, playPreviousSong, toggleLoop, toggleRandomize } = controls
 
   const currentSongSeconds = Math.floor(currentSongTime % 60)
   const currentSongMinutes = Math.floor(currentSongTime / 60)
@@ -75,26 +75,31 @@ export default function Home({ songs }: props) {
           </div>
 
           <div className={styles.controlButtons}>
-            <IoMdSkipBackward size={20} onClick={controls.playPreviousSong} />
-            <IoIosRewind size={25} onClick={() => backwards(10)} />
+            <IoMdShuffle className={`${styles.icon} ${randomized ? "" : styles.iconInactive}`} onClick={toggleRandomize} size={18} />
+            <IoMdSkipBackward className={`${styles.icon}`} size={18} onClick={playPreviousSong} />
+            <IoMdRewind className={`${styles.icon}`} size={18} onClick={() => backwards(10)} />
             {
               state.isPlaying ? <FaRegCirclePause size={45} onClick={controls.pause} /> : <FaRegCirclePlay size={45} onClick={controls.play} />
             }
-            <IoIosFastforward size={25} onClick={() => forward(10)} />
-            <IoMdSkipForward size={20} onClick={controls.playNextSong} />
+            <IoMdFastforward className={`${styles.icon}`} size={18} onClick={() => forward(10)} />
+            <IoMdSkipForward className={`${styles.icon}`} size={18} onClick={playNextSong} />
+            <IoMdRepeat className={`${styles.icon} ${looping ? "" : styles.iconInactive}`} onClick={toggleLoop} size={18} />
 
           </div>
 
           <div className={styles.optionButtons}>
-            <button>info</button>
-            <button>screen</button>
-            <button>volume</button>
+            {
+              muted ? <IoMdVolumeOff className={`${styles.icon}`} onClick={unmute} size={18} /> : <IoMdVolumeHigh className={`${styles.icon}`} onClick={mute} size={18} />
+            }
+            <IoMdInformationCircleOutline className={`${styles.icon}`} size={18} />
+            <IoMdExpand className={`${styles.icon}`} size={18} />
           </div>
         </div>
       </div>
 
       <audio ref={audioElementRef} autoPlay src={filepath} muted />
       <img src={`data:${format};base64,${data}`} alt='' className={styles.backgroundCover} />
+      <div className={styles.modal}></div>
     </main>
   )
 }
