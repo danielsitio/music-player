@@ -43,10 +43,9 @@
 
 .currentTime,
 .duration {
-    font-size: 12px;
-    letter-spacing: -1px;
+    font-size: 10px;
+    letter-spacing: -.4px;
     font-weight: 300;
-    text-shadow: rgba(0, 0, 0, .01) 0 0 1px;
     width: 50px;
 
 }
@@ -58,18 +57,19 @@
 .linetime {
     position: relative;
     flex-grow: 1;
-    border-radius: 9999px;
+    border-radius: 99999px;
     overflow: visible;
     background-color: gray;
 }
 
 .linetimeCurrentTimeIndicator {
     position: relative;
+    height: 10px;
     width: 4px;
-    aspect-ratio: 1/1;
-    border-radius: 999px;
+    height: 4px;
+    border-radius: 9999px;
+    outline: 4px solid rgb(246, 127, 0);
     background-color: rgb(246, 127, 0);
-    outline: rgb(246, 127, 0) 5px solid;
     z-index: 2;
 
 }
@@ -89,7 +89,9 @@
     grid-template-columns: 1fr 1fr 1fr;
 }
 
-.descriptionContainer {}
+.descriptionContainer {
+    overflow: hidden;
+}
 
 .title {
     font-weight: 500;
@@ -100,6 +102,9 @@
 .artistAlbum {
     color: var(--text-2);
     font-size: smaller;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .controlButtons {

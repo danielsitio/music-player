@@ -10,6 +10,7 @@ import { Inter } from 'next/font/google'
 
 import { FaRegCirclePlay, FaRegCirclePause } from "react-icons/fa6";
 import { IoMdSkipBackward, IoMdSkipForward, IoMdInformationCircleOutline, IoMdExpand, IoMdVolumeHigh, IoMdVolumeOff, IoMdRewind, IoMdFastforward, IoMdRepeat, IoMdShuffle } from "react-icons/io";
+import { motion } from 'framer-motion';
 
 
 
@@ -25,16 +26,16 @@ export default function Home({ songs }: props) {
 
   const [audioElementRef, { state, controls }] = useMusicPlayer(songs)
 
-  const { currentSong, currentSongTime, muted, looping, randomized } = state
+  const { currentSong, currentSongTime, currentSongSeconds, muted, looping, randomized, currentSongIndex } = state
   const { artist, title, album, cover, filepath, duration } = currentSong
   const { format, data } = cover
 
   const { backwards, forward, playTime, mute, unmute, playNextSong, playPreviousSong, toggleLoop, toggleRandomize } = controls
 
-  const currentSongSeconds = Math.floor(currentSongTime % 60)
-  const currentSongMinutes = Math.floor(currentSongTime / 60)
+  const songsSeconds = Math.floor(currentSongSeconds % 60)
+  const currentSongMinutes = Math.floor(currentSongSeconds / 60)
 
-  const proportionalCurrentTime = Math.floor((currentSongTime * 100) / duration)
+  const proportionalCurrentTime = (currentSongTime * 100) / duration
 
   const linetimeClickHandler: MouseEventHandler = (event) => {
     const element = event.target as HTMLDivElement
@@ -42,9 +43,9 @@ export default function Home({ songs }: props) {
     const endPoint = element.getBoundingClientRect().left + element.getBoundingClientRect().width
     const distanceFromStartToEnd = endPoint - startPoint
     const distanceClickedFromStartPoint = event.clientX - startPoint
-    const porcentualTimeClicked = Math.floor((distanceClickedFromStartPoint * 100) / distanceFromStartToEnd)
-    console.log("el tiempo porcentual es " + porcentualTimeClicked + " y la duracion es " + duration)
-    const timeClicked = Math.floor((duration / 100) * porcentualTimeClicked)
+    const porcentualTimeClicked = (distanceClickedFromStartPoint * 100) / distanceFromStartToEnd
+    console.log("el tiempo porcentual del click es " + porcentualTimeClicked + " y la del tiempo es " + proportionalCurrentTime)
+    const timeClicked = (duration / 100) * porcentualTimeClicked
     playTime(timeClicked)
   }
 
@@ -58,9 +59,9 @@ export default function Home({ songs }: props) {
       <div className={styles.controls}>
 
         <div className={styles.topPart}>
-          <div className={styles.currentTime}>00:{currentSongMinutes < 10 ? "0" + currentSongMinutes : currentSongMinutes}:{currentSongSeconds < 10 ? "0" + currentSongSeconds : currentSongSeconds}</div>
+          <div className={styles.currentTime}>00:{currentSongMinutes < 10 ? "0" + currentSongMinutes : currentSongMinutes}:{songsSeconds < 10 ? "0" + songsSeconds : songsSeconds}</div>
           <div className={styles.linetime} onClick={linetimeClickHandler}>
-            <div style={{ left: proportionalCurrentTime + "%" }} className={styles.linetimeCurrentTimeIndicator} />
+            <motion.div transition={{ duration: 1, ease: "linear" }} style={{ left: proportionalCurrentTime + "%" }} className={styles.linetimeCurrentTimeIndicator} />
           </div>
           <div className={styles.duration}>00:0{Math.floor(duration / 60)}:{Math.floor(duration % 60)}</div>
         </div>
@@ -69,20 +70,20 @@ export default function Home({ songs }: props) {
 
           <div className={styles.descriptionContainer}>
             <div className={styles.title}>{title}</div>
-            <div className={styles.artistAlbum}>
-              <div>{artist + " ⋅ " + album}</div>
+            <div>
+              <div><p className={styles.artistAlbum}>{artist + " ⋅ " + album}</p></div>
             </div>
           </div>
 
           <div className={styles.controlButtons}>
             <IoMdShuffle className={`${styles.icon} ${randomized ? "" : styles.iconInactive}`} onClick={toggleRandomize} size={18} />
-            <IoMdSkipBackward className={`${styles.icon}`} size={18} onClick={playPreviousSong} />
+            <IoMdSkipBackward className={`${styles.icon} ${currentSongIndex === 0 ? styles.iconInactive : ""}`} size={18} onClick={playPreviousSong} />
             <IoMdRewind className={`${styles.icon}`} size={18} onClick={() => backwards(10)} />
             {
               state.isPlaying ? <FaRegCirclePause size={45} onClick={controls.pause} /> : <FaRegCirclePlay size={45} onClick={controls.play} />
             }
             <IoMdFastforward className={`${styles.icon}`} size={18} onClick={() => forward(10)} />
-            <IoMdSkipForward className={`${styles.icon}`} size={18} onClick={playNextSong} />
+            <IoMdSkipForward className={`${styles.icon} ${currentSongIndex === songs.length - 1 ? styles.iconInactive : ""}`} size={18} onClick={playNextSong} />
             <IoMdRepeat className={`${styles.icon} ${looping ? "" : styles.iconInactive}`} onClick={toggleLoop} size={18} />
 
           </div>
@@ -97,7 +98,7 @@ export default function Home({ songs }: props) {
         </div>
       </div>
 
-      <audio ref={audioElementRef} autoPlay src={filepath} muted />
+      <audio ref={audioElementRef} autoPlay src={filepath} />
       <img src={`data:${format};base64,${data}`} alt='' className={styles.backgroundCover} />
       <div className={styles.modal}></div>
     </main>
